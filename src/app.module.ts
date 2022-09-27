@@ -12,6 +12,8 @@ import { DialectSdk } from './dialect-sdk';
 import { ConfigModule } from '@nestjs/config';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './health.controller';
+import { InvestinService } from './investin.service';
+import { DepositMonitoringService } from './deposit-monitoring.service';
 
 @Module({
   imports: [
@@ -36,7 +38,9 @@ import { HealthController } from './health.controller';
   ],
   controllers: [HealthController],
   providers: [
-    MonitoringService,
+    // MonitoringService,
+    InvestinService,
+    DepositMonitoringService,
     {
       provide: DialectSdk,
       useValue: Dialect.sdk({
