@@ -21,7 +21,7 @@ env:
 
 jobs:
   deployment:
-    name: Create deployment PR
+    name: Deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { MonitoringService } from './monitoring.service';
 import { LoggerModule } from 'nestjs-pino';
 import { HttpModule } from '@nestjs/axios';
 import {
