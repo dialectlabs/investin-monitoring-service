@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { MonitoringService } from './monitoring.service';
 import { LoggerModule } from 'nestjs-pino';
 import { HttpModule } from '@nestjs/axios';
 import {
@@ -12,6 +11,8 @@ import { DialectSdk } from './dialect-sdk';
 import { ConfigModule } from '@nestjs/config';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './health.controller';
+import { InvestinService } from './investin.service';
+import { DepositMonitoringService } from './deposit-monitoring.service';
 
 @Module({
   imports: [
@@ -36,7 +37,9 @@ import { HealthController } from './health.controller';
   ],
   controllers: [HealthController],
   providers: [
-    MonitoringService,
+    // MonitoringService,
+    InvestinService,
+    DepositMonitoringService,
     {
       provide: DialectSdk,
       useValue: Dialect.sdk({
