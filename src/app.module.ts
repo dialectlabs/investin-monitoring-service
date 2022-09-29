@@ -13,6 +13,8 @@ import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './health.controller';
 import { InvestinService } from './investin.service';
 import { DepositMonitoringService } from './deposit-monitoring.service';
+import { MMDepositMonitoringService } from './mm-deposit-monitoring.service';
+import { MMWithdrawMonitoringService } from './mm-withdraw-monitoring.service copy';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { DepositMonitoringService } from './deposit-monitoring.service';
     // MonitoringService,
     InvestinService,
     DepositMonitoringService,
+    MMDepositMonitoringService,
+    MMWithdrawMonitoringService,
     {
       provide: DialectSdk,
       useValue: Dialect.sdk({
