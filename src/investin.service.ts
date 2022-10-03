@@ -15,7 +15,7 @@ export interface InvestmentsMMData {
     investments: INVESTMENT_MM[];
 }
 
-const connection = new Connection(process.env.DIALECT_SDK_SOLANA_RPC_URL ?? 'https://investinpro.genesysgo.net');
+const connection = new Connection(process.env.DIALECT_SDK_SOLANA_RPC_URL ?? 'https://xenonso-main-9d21.mainnet.rpcpool.com/11a75a74-fd8e-44cc-87f4-d84bb82d0983');
 
 @Injectable()
 export class InvestinService {
@@ -44,30 +44,16 @@ export class InvestinService {
     async getMMPendingInvestments (subscribers: PublicKey[]): Promise<SourceData<InvestmentsMMData>[]> {
         const client = new InvestinMMClient(connection, PublicKey.default );
         const investments = await client.fetchAllPendingDeposits()
-
-        let ok : SourceData<{ subscriber: PublicKey, investments: INVESTMENT_MM[] }>[] = [];
-        for (let index = 0; index < subscribers.length; index++) {
-            const s = subscribers[index];
-            if(s){
-                const fundPDA = (await PublicKey.findProgramAddress([s.toBuffer()], programIdMM))[0];
-                const sourceData: SourceData<{ subscriber: PublicKey, investments: INVESTMENT_MM[] }> = {
-                    groupingKey: s.toBase58(),
-                    data: {
-                        subscriber: s,
-                        investments: investments.filter(f => f.fund.toBase58() == fundPDA.toBase58())
-                    },
-                };
-                ok.push(sourceData)
-            }
-            ok = ok.filter(k => k.data.investments.length > 0);
-        }
-        return ok;
+        return this.formatSubscribersData(investments, subscribers)
     };
 
     async getMMPendingWithdraws (subscribers: PublicKey[]): Promise<SourceData<InvestmentsMMData>[]> {
         const client = new InvestinMMClient(connection, PublicKey.default );
         const investments = await client.fetchAllPendingWithdraws()
+        return this.formatSubscribersData(investments, subscribers)
+    };
 
+    private async formatSubscribersData(investments: INVESTMENT_MM[], subscribers: PublicKey[]) {
         let ok : SourceData<{ subscriber: PublicKey, investments: INVESTMENT_MM[] }>[] = [];
         for (let index = 0; index < subscribers.length; index++) {
             const s = subscribers[index];
@@ -85,5 +71,5 @@ export class InvestinService {
             ok = ok.filter(k => k.data.investments.length > 0);
         }
         return ok;
-    };
+    }
 }

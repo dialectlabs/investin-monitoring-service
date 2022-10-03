@@ -12,7 +12,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './health.controller';
 import { InvestinService } from './investin.service';
-import { DepositMonitoringService } from './deposit-monitoring.service';
+import { DefiDepositMonitoringService } from './defi-deposit-monitoring.service';
 import { MMDepositMonitoringService } from './mm-deposit-monitoring.service';
 import { MMWithdrawMonitoringService } from './mm-withdraw-monitoring.service copy';
 
@@ -41,7 +41,7 @@ import { MMWithdrawMonitoringService } from './mm-withdraw-monitoring.service co
   providers: [
     // MonitoringService,
     InvestinService,
-    DepositMonitoringService,
+    DefiDepositMonitoringService,
     MMDepositMonitoringService,
     MMWithdrawMonitoringService,
     {

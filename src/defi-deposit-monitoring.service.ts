@@ -6,9 +6,9 @@ import { Duration } from 'luxon';
 import { InvestinService, InvestmentsData } from './investin.service';
 
 @Injectable()
-export class DepositMonitoringService implements OnModuleInit {
+export class DefiDepositMonitoringService implements OnModuleInit {
 
-  private readonly logger = new Logger(DepositMonitoringService.name);
+  private readonly logger = new Logger(DefiDepositMonitoringService.name);
 
   constructor(
     private readonly sdk: DialectSdk,
@@ -26,7 +26,7 @@ export class DepositMonitoringService implements OnModuleInit {
     }).defineDataSource<InvestmentsData>()
       .poll(
         async (subscribers) => this.investinService.getDefiInvestments(subscribers),
-        Duration.fromObject({ seconds: 10 }),
+        Duration.fromObject({ seconds: 60 }),
       )
       .transform<INVESTMENT[], INVESTMENT[]>({
         keys: ['investments'],

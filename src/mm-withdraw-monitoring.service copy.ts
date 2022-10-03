@@ -27,11 +27,11 @@ export class MMWithdrawMonitoringService implements OnModuleInit {
     }).defineDataSource<InvestmentsMMData>()
       .poll(
         async (subscribers) => this.investinService.getMMPendingWithdraws(subscribers),
-        Duration.fromObject({ seconds: 10 }),
+        Duration.fromObject({ seconds: 60 }),
       )
       .transform<INVESTMENT_MM[], INVESTMENT_MM[]>({
         keys: ['investments'],
-        pipelines: [Pipelines.added((fo1, fo2) => fo1.pubKey === (fo2.pubKey))],
+        pipelines: [Pipelines.added((fo1, fo2) => fo1.pubKey?.toBase58() === (fo2.pubKey?.toBase58()))],
       })
       .notify()
       .dialectSdk(
