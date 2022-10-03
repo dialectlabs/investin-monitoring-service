@@ -15,7 +15,7 @@ export interface InvestmentsMMData {
     investments: INVESTMENT_MM[];
 }
 
-const connection = new Connection(process.env.DIALECT_SDK_SOLANA_RPC_URL ?? 'https://xenonso-main-9d21.mainnet.rpcpool.com/11a75a74-fd8e-44cc-87f4-d84bb82d0983');
+const connection = new Connection(process.env.DIALECT_SDK_SOLANA_RPC_URL ?? 'https://investinpro.genesysgo.net');
 
 @Injectable()
 export class InvestinService {
