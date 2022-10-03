@@ -1,14 +1,15 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DialectSdk } from './dialect-sdk';
 import { Monitors, Pipelines } from '@dialectlabs/monitor';
-import { INVESTMENT } from '@investin/client-sdk';
+
 import { Duration } from 'luxon';
-import { InvestinService, InvestmentsData } from './investin.service';
+import { InvestinService, InvestmentsData, InvestmentsMMData } from './investin.service';
+import { INVESTMENT_MM } from 'client-mm-sdk';
 
 @Injectable()
-export class DepositMonitoringService implements OnModuleInit {
+export class MMWithdrawMonitoringService implements OnModuleInit {
 
-  private readonly logger = new Logger(DepositMonitoringService.name);
+  private readonly logger = new Logger(MMWithdrawMonitoringService.name);
 
   constructor(
     private readonly sdk: DialectSdk,
@@ -23,22 +24,22 @@ export class DepositMonitoringService implements OnModuleInit {
           telegramBotToken: process.env.TELEGRAM_TOKEN!,
         },
       },
-    }).defineDataSource<InvestmentsData>()
+    }).defineDataSource<InvestmentsMMData>()
       .poll(
-        async (subscribers) => this.investinService.getDefiInvestments(subscribers),
-        Duration.fromObject({ seconds: 10 }),
+        async (subscribers) => this.investinService.getMMPendingWithdraws(subscribers),
+        Duration.fromObject({ seconds: 60 }),
       )
-      .transform<INVESTMENT[], INVESTMENT[]>({
+      .transform<INVESTMENT_MM[], INVESTMENT_MM[]>({
         keys: ['investments'],
-        pipelines: [Pipelines.added((fo1, fo2) => fo1.pubKey === (fo2.pubKey))],
+        pipelines: [Pipelines.added((fo1, fo2) => fo1.pubKey?.toBase58() === (fo2.pubKey?.toBase58()))],
       })
       .notify()
       .dialectSdk(
         ({ value, context }) => {
-          const message: string = `You have recieved a deposit of $${value.map(f => (Number(f.amount_in_router) / 10 ** 6).toFixed(2)).join(',')}!`;
+          const message: string = `You have recieved a Withdraw request of $${value.map(f => (Number(f.amount) / 10 ** 6).toFixed(2)).join(',')}!`;
 
           this.logger.log(
-            `${context.origin.subscriber} has recieved a deposit of $${value.map(f => (Number(f.amount_in_router) / 10 ** 6).toFixed(2)).join(',')}!`,
+            `${context.origin.subscriber} has recieved a Withdraw request of $${value.map(f => (Number(f.amount) / 10 ** 6).toFixed(2)).join(',')}!`,
           );
           return {
             title: `Deposit Received!`,
