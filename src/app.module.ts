@@ -52,6 +52,9 @@ import { MMWithdrawMonitoringService } from './mm-withdraw-monitoring.service co
           network: process.env.DIALECT_SDK_SOLANA_NETWORK_NAME as SolanaNetwork,
           rpcUrl: process.env.DIALECT_SDK_SOLANA_RPC_URL,
         },
+        dialectCloud: {
+          url: process.env.DIALECT_SDK_DIALECT_CLOUD_URL,
+        },
         wallet: NodeDialectWalletAdapter.create(),
       }),
     },
